@@ -1,0 +1,8 @@
+python-dotenv          # If you prefer .env file support
+requests               # For generic web requests (not used currently)
+lxml                   # Faster HTML parser for BeautifulSoup
+boto3
+beautifulsoup4
+playwright
+python-decouple
+pytest
