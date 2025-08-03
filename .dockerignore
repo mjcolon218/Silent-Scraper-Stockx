@@ -7,6 +7,5 @@ __pycache__/
 .env
 .DS_Store
 .vscode/
-tests/
 node_modules/
 *.tar
