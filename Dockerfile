@@ -1,17 +1,21 @@
-# --- Stage 1: Build ---
-    FROM mcr.microsoft.com/playwright/python:v1.43.1 AS builder
+# --- Base image with Python + Playwright + Browsers ---
+    FROM mcr.microsoft.com/playwright/python:v1.44.0-jammy
+
+    # Set working directory
     WORKDIR /app
     
-    # Install system packages needed by Playwright (already included in base image)
+    # Copy requirements first to leverage Docker caching
     COPY requirements.txt .
-    RUN pip install --no-cache-dir -r requirements.txt
     
-    # --- Stage 2: Final image ---
-    FROM mcr.microsoft.com/playwright/python:v1.43.1
-    WORKDIR /app
+    # Install Python packages
+    RUN pip install --no-cache-dir -r requirements.txt && rm -rf ~/.cache/pip
     
-    COPY --from=builder /usr/local /usr/local
-    COPY . /app
+    # Install Playwright browsers (optional — image already includes them, but this ensures latest)
+    RUN playwright install --with-deps
     
+    # Copy source code
+    COPY . .
+    
+    # Run the main script
     CMD ["python", "lambda_fn/pricetracker.py"]
     
